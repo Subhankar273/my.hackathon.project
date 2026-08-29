@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoodCraft — CodeCrafters</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-[#090d16] text-slate-100 min-h-screen flex flex-col justify-between p-4 relative overflow-x-hidden">
+
+  <!-- Ambient Glow Accents -->
+  <div class="fixed -top-24 -left-24 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+  <div class="fixed -bottom-24 -right-24 w-96 h-96 bg-purple-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+  <!-- Header -->
+  <header class="w-full max-w-xl mx-auto flex items-center justify-between py-4 border-b border-slate-800">
+    <div class="flex items-center gap-3">
+      <div class="h-9 w-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-purple-500 flex items-center justify-center text-white shadow-md shadow-indigo-600/30">
+        <i data-lucide="heart" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <h1 class="font-bold text-base leading-tight text-white">MoodCraft</h1>
+        <p class="text-[11px] text-indigo-400 font-medium">by CodeCrafters</p>
+      </div>
+    </div>
+
+    <!-- Header Actions -->
+    <div class="flex items-center gap-2">
+      <button id="sosBtn" class="px-3 py-1.5 bg-rose-950/80 border border-rose-800/80 text-rose-300 rounded-xl text-xs font-semibold hover:bg-rose-900 transition flex items-center gap-1.5 shadow-sm">
+        <i data-lucide="life-buoy" class="w-3.5 h-3.5 text-rose-400"></i>
+        <span>Need Help?</span>
+      </button>
+
+      <button id="openHelpBtn" class="p-2 bg-slate-900 border border-slate-800 rounded-xl hover:text-indigo-400 hover:border-slate-700 transition" title="Support">
+        <i data-lucide="headset" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Wrapper -->
+  <main class="w-full max-w-xl mx-auto my-auto py-6">
+
+    <!-- 0. WELCOME / ONBOARDING SCREEN -->
+    <div id="welcomeView" class="card space-y-6 text-center">
+      <div class="inline-flex p-3.5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
+        <i data-lucide="sparkles" class="w-8 h-8"></i>
+      </div>
+
+      <div class="space-y-2">
+        <span class="text-[11px] font-bold tracking-widest uppercase text-indigo-400">Personal Wellness Log</span>
+        <h2 class="text-2xl font-black text-white tracking-tight">Track Your Emotional Pulse</h2>
+        <p class="text-xs text-slate-400 max-w-md mx-auto leading-relaxed">
+          Log daily moods, add contextual reflections, analyze trends over time, and receive instant support when feeling overwhelmed—engineered by <strong class="text-slate-200">CodeCrafters</strong>.
+        </p>
+      </div>
+
+      <!-- Feature Badges -->
+      <div class="grid grid-cols-3 gap-2.5 text-left py-1">
+        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <i data-lucide="smile" class="w-4 h-4 text-indigo-400 mb-1.5"></i>
+          <p class="text-xs font-bold text-slate-200">Mood Rating</p>
+          <span class="text-[10px] text-slate-400 block">5-level scale</span>
+        </div>
+        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <i data-lucide="trending-up" class="w-4 h-4 text-indigo-400 mb-1.5"></i>
+          <p class="text-xs font-bold text-slate-200">Live Charts</p>
+          <span class="text-[10px] text-slate-400 block">Weekly trajectory</span>
+        </div>
+        <div class="bg-slate-900/80 p-3 rounded-xl border border-slate-800">
+          <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400 mb-1.5"></i>
+          <p class="text-xs font-bold text-slate-200">SOS Assist</p>
+          <span class="text-[10px] text-slate-400 block">Instant helpline</span>
+        </div>
+      </div>
+
+      <!-- Human Verification / Captcha -->
+      <div class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex items-center justify-between">
+        <label class="flex items-center gap-3 cursor-pointer select-none">
+          <input type="checkbox" id="humanCaptchaCheck" class="w-4 h-4 rounded border-slate-700 text-indigo-600 focus:ring-0 cursor-pointer">
+          <span class="text-xs font-medium text-slate-300">I'm a human exploring wellness</span>
+        </label>
+        <div class="flex items-center gap-1.5 text-[10px] text-slate-500 font-medium">
+          <i data-lucide="shield-check" class="w-3.5 h-3.5 text-indigo-400"></i>
+          Verified
+        </div>
+      </div>
+
+      <button id="enterAppBtn" disabled class="w-full py-3.5 bg-slate-800 text-slate-400 font-semibold text-sm rounded-xl cursor-not-allowed transition flex items-center justify-center gap-2">
+        <span>Proceed to Journal</span>
+        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+      </button>
+    </div>
+
+    <!-- 1. MAIN JOURNAL & TREND DASHBOARD -->
+    <div id="journalView" class="space-y-5 hidden">
+      
+      <!-- Entry Input Card -->
+      <div class="card space-y-4">
+        <div class="flex items-center justify-between">
+          <h2 class="text-sm font-bold text-white flex items-center gap-2">
+            <i data-lucide="calendar" class="w-4 h-4 text-indigo-400"></i>
+            How are you feeling today?
+          </h2>
+          <span id="currentDateBadge" class="text-[11px] text-slate-400 font-medium bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-800">Today</span>
+        </div>
+
+        <!-- 5 Mood Selector Buttons -->
+        <div class="grid grid-cols-5 gap-2" id="moodPicker">
+          <button type="button" data-score="1" data-mood="Terrible" class="mood-btn p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-center transition flex flex-col items-center gap-1">
+            <span class="text-2xl">😫</span>
+            <span class="text-[10px] text-slate-400 font-medium">Awful</span>
+          </button>
+          <button type="button" data-score="2" data-mood="Bad" class="mood-btn p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-center transition flex flex-col items-center gap-1">
+            <span class="text-2xl">😔</span>
+            <span class="text-[10px] text-slate-400 font-medium">Low</span>
+          </button>
+          <button type="button" data-score="3" data-mood="Okay" class="mood-btn p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-center transition flex flex-col items-center gap-1">
+            <span class="text-2xl">😐</span>
+            <span class="text-[10px] text-slate-400 font-medium">Neutral</span>
+          </button>
+          <button type="button" data-score="4" data-mood="Good" class="mood-btn p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-center transition flex flex-col items-center gap-1">
+            <span class="text-2xl">🙂</span>
+            <span class="text-[10px] text-slate-400 font-medium">Good</span>
+          </button>
+          <button type="button" data-score="5" data-mood="Awesome" class="mood-btn p-2.5 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800 text-center transition flex flex-col items-center gap-1">
+            <span class="text-2xl">🤩</span>
+            <span class="text-[10px] text-slate-400 font-medium">Great</span>
+          </button>
+        </div>
+
+        <!-- Short Reflection Note -->
+        <textarea 
+          id="moodNoteInput" 
+          rows="2" 
+          placeholder="Write a short reflection or what triggered this mood (optional)..."
+          class="w-full bg-slate-900/90 border border-slate-800 rounded-xl p-3 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition resize-none"
+        ></textarea>
+
+        <button id="saveMoodBtn" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold rounded-xl transition shadow-md shadow-indigo-600/20 flex items-center justify-center gap-2">
+          <i data-lucide="save" class="w-3.5 h-3.5"></i>
+          <span>Save Today's Entry</span>
+        </button>
+      </div>
+
+      <!-- Trend Chart Card -->
+      <div class="card space-y-3">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xs font-bold text-slate-200">Mood Trajectory Chart</h3>
+            <p class="text-[10px] text-slate-400">Tracking emotional scores (1: Awful to 5: Great)</p>
+          </div>
+          <span id="avgScoreBadge" class="text-xs font-bold text-indigo-400 bg-indigo-950/60 border border-indigo-800/60 px-2 py-0.5 rounded-lg">Avg: --</span>
+        </div>
+
+        <div class="h-44 w-full pt-1">
+          <canvas id="moodChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Recent History Logs -->
+      <div class="card space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold text-slate-200">Recent Reflections</h3>
+          <button id="clearLogsBtn" class="text-[10px] text-slate-500 hover:text-rose-400 transition">Reset Data</button>
+        </div>
+        <div id="logsContainer" class="space-y-2 text-xs">
+          <!-- Injected via JavaScript -->
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- SOS / BREAKDOWN MODAL -->
+  <div id="sosModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="card w-full max-w-md space-y-5 border-rose-900/50 relative">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center gap-2 text-rose-400">
+          <i data-lucide="heart-pulse" class="w-5 h-5"></i>
+          <h3 class="font-bold text-sm text-white">Emergency Breakdown Helpline</h3>
+        </div>
+        <button id="closeSosBtn" class="text-slate-400 hover:text-white transition">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <p class="text-slate-300 leading-relaxed">
+          You are not alone. If you are experiencing intense emotional overwhelm, stress, or panic, please reach out directly:
+        </p>
+
+        <!-- Direct Phone Link -->
+        <a href="tel:+916370670184" class="p-3.5 bg-rose-950/40 rounded-xl border border-rose-800/60 hover:bg-rose-900/40 flex items-center justify-between group transition">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-rose-600/20 text-rose-400 rounded-lg">
+              <i data-lucide="phone-call" class="w-5 h-5"></i>
+            </div>
+            <div>
+              <span class="text-[10px] text-rose-300 block font-medium">Direct Helpline Number</span>
+              <span class="text-base font-black text-rose-100 group-hover:text-rose-300 transition">+91 6370670184</span>
+            </div>
+          </div>
+          <i data-lucide="arrow-up-right" class="w-4 h-4 text-rose-400"></i>
+        </a>
+
+        <!-- WhatsApp Quick Message -->
+        <a href="https://wa.me/916370670184?text=Hi%20CodeCrafters,%20I%20need%20mental%20health%20support." target="_blank" class="p-3 bg-slate-900/90 rounded-xl border border-slate-800 hover:border-emerald-500/50 flex items-center justify-between group transition">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-emerald-600/10 text-emerald-400 rounded-lg">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-400 block">WhatsApp Distress Chat</span>
+              <span class="text-xs font-bold text-slate-200 group-hover:text-emerald-400 transition">Talk to Someone</span>
+            </div>
+          </div>
+          <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-500"></i>
+        </a>
+
+        <div class="p-3 bg-slate-900/60 rounded-xl border border-slate-800 text-[11px] text-slate-400">
+          <strong>Quick Grounding Tip:</strong> Take 4 seconds to inhale deeply, hold for 4 seconds, and exhale slowly for 6 seconds. Repeat 3 times.
+        </div>
+      </div>
+
+      <div class="text-center text-[10px] text-slate-500">
+        Emergency Wellness Support by <span class="text-slate-300 font-semibold">CodeCrafters</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="w-full max-w-xl mx-auto flex items-center justify-between py-3 text-xs text-slate-500 border-t border-slate-900">
+    <span>Crafted with <span class="text-rose-500">♥</span> by <strong class="text-slate-400">CodeCrafters</strong></span>
+    <span>Helpline: <a href="tel:+916370670184" class="text-slate-400 hover:text-indigo-400 font-medium transition">6370670184</a></span>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
